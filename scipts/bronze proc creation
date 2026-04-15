@@ -1,19 +1,24 @@
-CREATE OR ALTER PROCEDURE bronze_layer.load_bronze_crm
+CREATE OR ALTER PROCEDURE bronze_layer.load_bronze
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @proc_start DATETIME2 = SYSDATETIME();
+    DECLARE @batch_start DATETIME2 = SYSDATETIME();
+    DECLARE @batch_end DATETIME2;
     DECLARE @step_start DATETIME2;
     DECLARE @step_end DATETIME2;
 
-    PRINT '=========================================';
-    PRINT 'PROCEDURE: bronze_layer.load_bronze_crm';
-    PRINT 'SOURCE: CRM';
-    PRINT 'START TIME: ' + CONVERT(VARCHAR(30), @proc_start, 120);
-    PRINT '=========================================';
+    PRINT '==================================================';
+    PRINT 'PROCEDURE: bronze_layer.load_bronze';
+    PRINT 'BRONZE LAYER LOAD STARTED';
+    PRINT 'START TIME: ' + CONVERT(VARCHAR(30), @batch_start, 120);
+    PRINT '==================================================';
 
     BEGIN TRY
+
+        PRINT ' ';
+        PRINT '========== LOADING CRM SOURCE ==========';
+
         SET @step_start = SYSDATETIME();
         PRINT 'Loading table: bronze_layer.crm_cust_info';
 
@@ -65,40 +70,11 @@ BEGIN
         PRINT 'Completed: bronze_layer.crm_sales_details | Duration (seconds): '
             + CAST(DATEDIFF(SECOND, @step_start, @step_end) AS VARCHAR);
 
-        PRINT 'END TIME: ' + CONVERT(VARCHAR(30), SYSDATETIME(), 120);
-        PRINT 'TOTAL CRM DURATION (seconds): '
-            + CAST(DATEDIFF(SECOND, @proc_start, SYSDATETIME()) AS VARCHAR);
-    END TRY
-    BEGIN CATCH
-        PRINT '=========================================';
-        PRINT 'ERROR IN PROCEDURE: bronze_layer.load_bronze_crm';
-        PRINT 'ERROR MESSAGE: ' + ERROR_MESSAGE();
-        PRINT 'ERROR NUMBER: ' + CAST(ERROR_NUMBER() AS VARCHAR);
-        PRINT 'ERROR LINE: ' + CAST(ERROR_LINE() AS VARCHAR);
-        PRINT 'ERROR TIME: ' + CONVERT(VARCHAR(30), SYSDATETIME(), 120);
-        PRINT '=========================================';
-        THROW;
-    END CATCH
-END;
-GO
+        PRINT '========== CRM SOURCE LOADED ==========';
 
+        PRINT ' ';
+        PRINT '========== LOADING ERP SOURCE ==========';
 
-CREATE OR ALTER PROCEDURE bronze_layer.load_bronze_erp
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    DECLARE @proc_start DATETIME2 = SYSDATETIME();
-    DECLARE @step_start DATETIME2;
-    DECLARE @step_end DATETIME2;
-
-    PRINT '=========================================';
-    PRINT 'PROCEDURE: bronze_layer.load_bronze_erp';
-    PRINT 'SOURCE: ERP';
-    PRINT 'START TIME: ' + CONVERT(VARCHAR(30), @proc_start, 120);
-    PRINT '=========================================';
-
-    BEGIN TRY
         SET @step_start = SYSDATETIME();
         PRINT 'Loading table: bronze_layer.erp_CUST_AZ12';
 
@@ -150,59 +126,31 @@ BEGIN
         PRINT 'Completed: bronze_layer.erp_PX_CAT_G1V2 | Duration (seconds): '
             + CAST(DATEDIFF(SECOND, @step_start, @step_end) AS VARCHAR);
 
-        PRINT 'END TIME: ' + CONVERT(VARCHAR(30), SYSDATETIME(), 120);
-        PRINT 'TOTAL ERP DURATION (seconds): '
-            + CAST(DATEDIFF(SECOND, @proc_start, SYSDATETIME()) AS VARCHAR);
-    END TRY
-    BEGIN CATCH
-        PRINT '=========================================';
-        PRINT 'ERROR IN PROCEDURE: bronze_layer.load_bronze_erp';
-        PRINT 'ERROR MESSAGE: ' + ERROR_MESSAGE();
-        PRINT 'ERROR NUMBER: ' + CAST(ERROR_NUMBER() AS VARCHAR);
-        PRINT 'ERROR LINE: ' + CAST(ERROR_LINE() AS VARCHAR);
-        PRINT 'ERROR TIME: ' + CONVERT(VARCHAR(30), SYSDATETIME(), 120);
-        PRINT '=========================================';
-        THROW;
-    END CATCH
-END;
-GO
-
-
-CREATE OR ALTER PROCEDURE bronze_layer.load_bronze
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    DECLARE @batch_start DATETIME2 = SYSDATETIME();
-    DECLARE @batch_end DATETIME2;
-
-    PRINT '=========================================';
-    PRINT 'MASTER PROCEDURE: bronze_layer.load_bronze';
-    PRINT 'STARTING FULL BRONZE BATCH';
-    PRINT 'START TIME: ' + CONVERT(VARCHAR(30), @batch_start, 120);
-    PRINT '=========================================';
-
-    BEGIN TRY
-        EXEC bronze_layer.load_bronze_crm;
-        EXEC bronze_layer.load_bronze_erp;
+        PRINT '========== ERP SOURCE LOADED ==========';
 
         SET @batch_end = SYSDATETIME();
 
-        PRINT '=========================================';
-        PRINT 'FULL BRONZE BATCH COMPLETED';
+        PRINT ' ';
+        PRINT '==================================================';
+        PRINT 'BRONZE LAYER LOAD COMPLETED SUCCESSFULLY';
         PRINT 'END TIME: ' + CONVERT(VARCHAR(30), @batch_end, 120);
         PRINT 'TOTAL BATCH DURATION (seconds): '
             + CAST(DATEDIFF(SECOND, @batch_start, @batch_end) AS VARCHAR);
-        PRINT '=========================================';
+        PRINT '==================================================';
+
     END TRY
     BEGIN CATCH
-        PRINT '=========================================';
+        PRINT ' ';
+        PRINT '==================================================';
         PRINT 'ERROR IN PROCEDURE: bronze_layer.load_bronze';
         PRINT 'ERROR MESSAGE: ' + ERROR_MESSAGE();
         PRINT 'ERROR NUMBER: ' + CAST(ERROR_NUMBER() AS VARCHAR);
         PRINT 'ERROR LINE: ' + CAST(ERROR_LINE() AS VARCHAR);
         PRINT 'ERROR TIME: ' + CONVERT(VARCHAR(30), SYSDATETIME(), 120);
-        PRINT '=========================================';
+        PRINT 'TOTAL ELAPSED TIME BEFORE FAILURE (seconds): '
+            + CAST(DATEDIFF(SECOND, @batch_start, SYSDATETIME()) AS VARCHAR);
+        PRINT '==================================================';
+
         THROW;
     END CATCH
 END;
