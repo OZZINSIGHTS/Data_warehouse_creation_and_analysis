@@ -78,7 +78,7 @@ TABLOCK
 );
 
 
-TRUNCATE  TABLE bronze_layer.crm_prd_info 
+TRUNCATE  TABLE bronze_layer.crm_prd_info;
 BULK INSERT bronze_layer.crm_prd_info 
 FROM 'D:\dbc9660c89a3480fa5eb9bae464d6c07\sql-data-warehouse-project\datasets\source_crm\prd_info.csv'
 WITH ( FIRSTROW = 2,
@@ -88,7 +88,7 @@ TABLOCK
 );
 
 
-TRUNCATE  TABLE bronze_layer.crm_sales_details
+TRUNCATE  TABLE bronze_layer.crm_sales_details;
 BULK INSERT bronze_layer.crm_sales_details
 FROM 'D:\dbc9660c89a3480fa5eb9bae464d6c07\sql-data-warehouse-project\datasets\source_crm\sales_details.csv'
 WITH ( FIRSTROW = 2,
@@ -100,7 +100,7 @@ TABLOCK
 
 
 
-TRUNCATE  TABLE bronze_layer.erp_CUST_AZ12
+TRUNCATE  TABLE bronze_layer.erp_CUST_AZ12;
 BULK INSERT bronze_layer.erp_CUST_AZ12 
 FROM 'D:\dbc9660c89a3480fa5eb9bae464d6c07\sql-data-warehouse-project\datasets\source_erp\CUST_AZ12.csv'
 WITH ( FIRSTROW = 2,
@@ -110,7 +110,7 @@ TABLOCK
 );
 
 
-TRUNCATE  TABLE bronze_layer.erp_LOC_A101
+TRUNCATE  TABLE bronze_layer.erp_LOC_A101;
 BULK INSERT bronze_layer.erp_LOC_A101
 FROM 'D:\dbc9660c89a3480fa5eb9bae464d6c07\sql-data-warehouse-project\datasets\source_erp\LOC_A101.csv'
 WITH ( FIRSTROW = 2,
@@ -121,7 +121,7 @@ TABLOCK
 
 
 
-TRUNCATE  TABLE bronze_layer.erp_PX_CAT_G1V2
+TRUNCATE  TABLE bronze_layer.erp_PX_CAT_G1V2;
 BULK INSERT bronze_layer.erp_PX_CAT_G1V2 
 FROM 'D:\dbc9660c89a3480fa5eb9bae464d6c07\sql-data-warehouse-project\datasets\source_erp\PX_CAT_G1V2.csv'
 WITH ( FIRSTROW = 2,
