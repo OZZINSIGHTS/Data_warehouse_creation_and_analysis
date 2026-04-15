@@ -129,3 +129,28 @@ TABLOCK
 
 -----(TRUNCATE TABLE bronze_layer.crm_cust_info GO BULK INSERT....)-------
 ----------TO FIX DUPLICATED INSERT --------
+
+-------CHECKING IF DDL PROCESS DONE CORRECLTY---------
+
+SELECT *
+  FROM [Data_warehouse].[bronze_layer].[crm_cust_info]
+
+SELECT *
+  FROM [Data_warehouse].[bronze_layer].[crm_prd_info]
+
+
+SELECT *
+  FROM [Data_warehouse].[bronze_layer].[crm_sales_details]
+
+
+SELECT *
+  FROM [Data_warehouse].[bronze_layer].[erp_LOC_A101]
+
+
+SELECT *
+  FROM [Data_warehouse].[bronze_layer].[erp_PX_CAT_G1V2]
+
+
+SELECT *
+  FROM [Data_warehouse].[bronze_layer].[erp_CUST_AZ12]
+
