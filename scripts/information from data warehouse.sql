@@ -86,5 +86,5 @@ SELECT
 FROM sales_cte ) N 
 WHERE previous_month_sales IS NOT NULL
 
---Note: June had several sales amount growth spikes for over 20% to 44% over 2011 / 2012 / 2013
---------sales significally dropped in 2014
+--Note: June had several sales amount growth spikes for over +20% to +44% over 2011 / 2012 / 2013
+--------sales significally dropped from dec 2013 to jan 2014 by -69.12% then by -97.40% in Feb as the last month where records had ended.
