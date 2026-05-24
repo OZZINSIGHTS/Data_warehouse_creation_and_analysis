@@ -1,9 +1,4 @@
-SELECT MONTH(due_date),SUM(sales_amount),
-LAG(SUM(sales_amount)) OVER(ORDER BY MONTH(due_date) ,
-ROUND(SUM(SALES_AMOUNT) - (LAG(SUM(sales_amount)) OVER(ORDER BY MONTH(due_date)) * 100
-    /NULLIF((LAG(SUM(sales_amount)) OVER(ORDER BY MONTH(due_date))),0)),2)) GROWTH
-FROM gold_layer.fact_sales
-GROUP BY MONTH(due_date)
+
 
 
 WITH sales_cte AS
