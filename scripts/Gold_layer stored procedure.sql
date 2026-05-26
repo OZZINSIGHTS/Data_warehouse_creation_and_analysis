@@ -78,6 +78,7 @@ BEGIN
         , a.prd_key product_number
         , a.prd_nm product_name
         , b.SUBCAT sub_category
+        , a.prd_cost cost
         , b.CAT category
         , a.prd_line product_line
         , b.MAINTENANCE maintenance
