@@ -87,7 +87,7 @@ ON a.customer_key = b.customer_key
 GROUP BY b.country
 ORDER BY items_sold_distribution DESC
 ---------------------------------------------------
--------------------------------------------------
+-------------------------------------------------I NEED TO CORRECT THIS 
 WITH YEARLY_SALES AS (
 SELECT YEAR(fs.order_date) Years ,dp.product_name pd_name,SUM(fs.sales_amount) TOTALSALES
 FROM gold_layer.fact_sales fs
@@ -103,6 +103,17 @@ COALESCE((TOTALSALES - LAG(TOTALSALES) OVER(PARTITION BY pd_name ORDER BY Years)
 (TOTALSALES - AVG(TOTALSALES) OVER(PARTITION BY YEARS))/ NULLIF(AVG(TOTALSALES) OVER(PARTITION BY YEARS),0)*100 AS AVGG
 FROM YEARLY_SALES
 ORDER BY Years
+
+--------------------------------------------------------------------------
+-------------------------PART TO WHOLE BY CATEGORY----------------------------------------------------
+
+WITH TOTAL_SALES AS (
+SELECT DM.category CATEGORY, SUM(FS.sales_amount) SALES FROM gold_layer.fact_sales FS
+LEFT JOIN gold_layer.dim_products DM
+ON FS.product_key = DM.product_key
+GROUP BY DM.category)
+SELECT CATEGORY, SALES, SUM(SALES) OVER() OVERALLSALES
+,CONCAT(ROUND((CAST(SALES AS FLOAT)/SUM(SALES) OVER() ) *100,2),'%') 'OVERALL_CHANGE%' FROM TOTAL_SALES
 --------------------------------------------------------------------------------------------------------
 
 
