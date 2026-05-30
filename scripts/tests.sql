@@ -86,7 +86,25 @@ gold_layer.dim_customers b
 ON a.customer_key = b.customer_key
 GROUP BY b.country
 ORDER BY items_sold_distribution DESC
------------------------------------------
+---------------------------------------------------
+-------------------------------------------------
+WITH YEARLY_SALES AS (
+SELECT YEAR(fs.order_date) Years ,dp.product_name pd_name,SUM(fs.sales_amount) TOTALSALES
+FROM gold_layer.fact_sales fs
+LEFT JOIN 
+gold_layer.dim_products dp
+ON 
+dp.product_key = fs.product_key 
+WHERE YEAR(fs.order_date) IS NOT NULL 
+GROUP BY YEAR(fs.order_date), dp.product_name
+)
+SELECT Years, pd_name, TOTALSALES, 
+COALESCE((TOTALSALES - LAG(TOTALSALES) OVER(PARTITION BY pd_name ORDER BY Years))/NULLIF(LAG(TOTALSALES) OVER(PARTITION BY pd_name ORDER BY Years),0)*100,0) prv_year_salesamount,
+(TOTALSALES - AVG(TOTALSALES) OVER(PARTITION BY YEARS))/ NULLIF(AVG(TOTALSALES) OVER(PARTITION BY YEARS),0)*100 AS AVGG
+FROM YEARLY_SALES
+ORDER BY Years
+--------------------------------------------------------------------------------------------------------
+
 
 
 
