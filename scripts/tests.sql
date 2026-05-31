@@ -116,6 +116,32 @@ SELECT CATEGORY, SALES, SUM(SALES) OVER() OVERALLSALES
 ,CONCAT(ROUND((CAST(SALES AS FLOAT)/SUM(SALES) OVER() ) *100,2),'%') 'OVERALL_CHANGE%' FROM TOTAL_SALES
 --------------------------------------------------------------------------------------------------------
 
+---------------------------CUSTOMERS STATEMENT ---------------------------
+	WITH INFO AS (
+	
+	SELECT C.customer_key CUSTOMERKEY
+	, C.firstname FIRSTNAME
+	, C.lastname LASTNAME 
+	, SUM(F.sales_amount) SALES
+	, DATEDIFF(MONTH,MIN(F.order_date),MAX(F.order_date)) span
+FROM gold_layer.fact_sales F
+LEFT JOIN gold_layer.dim_customers C
+ON F.customer_key = C.customer_key
+GROUP BY C.customer_key, C.firstname, C.lastname)
+ SELECT CUSTOMER_STATEMENT , COUNT(DISTINCT CUSTOMERKEY) 
+ FROM 
+ (SELECT CUSTOMERKEY
+, FIRSTNAME
+, LASTNAME 
+, CASE WHEN span > 12 AND SALES > 5000 THEN 'VIP'
+ WHEN span > 12 AND SALES <= 5000 THEN 'REGULAR'
+ELSE 'NEW'
+END AS CUSTOMER_STATEMENT 
+FROM INFO ) T 
+GROUP BY CUSTOMER_STATEMENT
+----------------------------------------------------------------------------------
+
+
 
 
 
